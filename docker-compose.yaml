@@ -1,15 +1,18 @@
 services:
-  db:
-    image: postgres:16
-    container_name: demo_db
+  mysql:
+    image: mysql:8.1
+    container_name: mysql_db
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: demo_user
-      POSTGRES_PASSWORD: demo_pass
-      POSTGRES_DB: demo_db
+      MYSQL_ROOT_PASSWORD: rootpassword       # пароль для root
+      MYSQL_DATABASE: mydb                     # назва бази даних
+      MYSQL_USER: myuser                       # користувач
+      MYSQL_PASSWORD: userpassword             # пароль користувача
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql             # щоб база зберігалась після перезапуску
+    command: --default-time-zone='+00:00'     # або UTC, щоб уникнути проблем з таймзоною
 
 volumes:
-  db_data:
+  mysql_data:
