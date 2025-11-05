@@ -2,3 +2,15 @@
 GET http://localhost:8080/items
 Authorization: Basic admin admin
 ###
+
+### Create new item
+POST http://localhost:8080/items
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "name": "First Item"
+}
+
+
+###
