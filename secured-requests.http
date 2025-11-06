@@ -57,7 +57,7 @@ Authorization: Basic admin admin
 ############################################
 # 6. Update item 1 (user) ✅
 ############################################
-PUT http://localhost:8080/items/8
+PUT http://localhost:8080/items/9
 Content-Type: application/json
 Authorization: Basic user user
 
@@ -68,7 +68,7 @@ Authorization: Basic user user
 ############################################
 # 7. Update item 1 (admin) ✅
 ############################################
-PUT http://localhost:8080/items/8
+PUT http://localhost:8080/items/10
 Content-Type: application/json
 Authorization: Basic admin admin
 
@@ -79,13 +79,13 @@ Authorization: Basic admin admin
 ############################################
 # 8. Delete item 1 (admin) ✅
 ############################################
-DELETE http://localhost:8080/items/8
+DELETE http://localhost:8080/items/10
 Authorization: Basic admin admin
 
 ############################################
 # 9. Delete item 1 (user) ❌ Forbidden (403)
 ############################################
-DELETE http://localhost:8080/items/1
+DELETE http://localhost:8080/items/10
 Authorization: Basic user user
 
 ############################################

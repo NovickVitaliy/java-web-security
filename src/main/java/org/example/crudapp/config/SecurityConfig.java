@@ -1,8 +1,12 @@
 package org.example.crudapp.config;
 
+import org.springframework.aop.Advisor;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,24 +23,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req -> req
-                        // Allow no-auth only for your HTML page
                         .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**").permitAll()
-
-                        // Only ADMIN or SUPERADMIN can access this GET
-                        .requestMatchers("/api/v1/items/hello/admin").hasAnyRole("ADMIN", "SUPERADMIN")
-
-                        // Secure HTTP DELETE /items/{id}
-                        .requestMatchers(HttpMethod.DELETE, "/items/**").hasAnyRole("ADMIN", "SUPERADMIN")
-
-                        // All authenticated users can GET, POST, PUT /items
-                        .requestMatchers(HttpMethod.GET, "/items/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/items/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/items/**").authenticated()
-
-                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
@@ -71,5 +60,11 @@ public class SecurityConfig {
 
 
         return new InMemoryUserDetailsManager(admin, user, superadmin);
+    }
+
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    public static Advisor preAuthorizeMethodInterceptor() {
+        return AuthorizationManagerBeforeMethodInterceptor.preAuthorize();
     }
 }
